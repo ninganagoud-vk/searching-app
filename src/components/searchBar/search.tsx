@@ -13,7 +13,7 @@ const SearchBar:React.FC<ISearchBar> = ({ handleOnBlur, selectedValue, searchVal
                     name="colors"
                     isClearable={true}
                     onChange={handleSelect}
-                    placeholder="Cousin Type"
+                    placeholder="Cuisine Type"
                     value={selectedValue}
                     options={[{ value: 'American', label: 'American' },
                     { value: 'Asian', label: 'Asian' },
