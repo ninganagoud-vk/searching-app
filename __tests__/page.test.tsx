@@ -6,7 +6,7 @@ describe('Page', () => {
   it('renders a heading', () => {
     render(<Page />)
  
-    const heading = screen.getByText('nkn')
+    const heading = screen.getByText('edd')
  
     expect(heading).toBeInTheDocument()
   })

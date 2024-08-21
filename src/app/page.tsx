@@ -1,10 +1,7 @@
-import Recipies from './recipes/page'
+import Recipies from '../components/recipesList'
  
 export default function Home() {
   return (
-    <div>
-      
      <Recipies/>
-    </div>
   )
 }
