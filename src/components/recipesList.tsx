@@ -3,16 +3,15 @@
 import { getRecipies } from "@/apis/index";
 import RecipieCard from "@/components/recipeCard";
 import SearchBar from "@/components/searchBar/search";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import Loader from "./loader";
 import { MultiValue } from "react-select";
-import {ISelectedValues, IAllQueryCombined,IObject } from '../interfaces/recipe'
-import PreviousMap from "postcss/lib/previous-map";
+import { ISelectedValues, IAllQueryCombined, IObject, IListingResponse } from '../interfaces/recipe'
 
 const Recipies: React.FC = () => {
   const router = useRouter()
-  const [recipes, setRecipies] = useState([])
+  const [recipes, setRecipies] = useState<any[] | undefined>([])
   const [searchVal, setSearchVal] = useState('')
   const [isLoading, setLoading] = useState(false)
   const [params, setParams] = useState<IAllQueryCombined>({
@@ -23,13 +22,11 @@ const Recipies: React.FC = () => {
     cuisineType: []
   })
 
-  
-
   const getData = async () => {
     try {
       setLoading(true)
       let tempParams = { ...params }
-      if(!tempParams?.q)tempParams={...tempParams,q:'q'}
+      if (!tempParams?.q) tempParams = { ...tempParams, q: 'q' }
 
       const newparams = new URLSearchParams({
         type: tempParams?.type,
@@ -38,14 +35,12 @@ const Recipies: React.FC = () => {
         q: tempParams?.q
       })
       tempParams.cuisineType.forEach((type: ISelectedValues) => newparams.append('cuisineType', type.value))
-      const response = await getRecipies(newparams.toString())
-      if (response.data?.hits) {
-        setRecipies(response.data?.hits)
-        setLoading(false)
-      }
+      let response: IListingResponse | undefined = await getRecipies(newparams.toString())
+      setRecipies(response?.hits)
+      setLoading(false)
     }
     catch (err) {
-      setLoading(false)
+      console.log('console', err)
     }
   }
 
@@ -59,7 +54,7 @@ const Recipies: React.FC = () => {
       setSearchVal(e.target.value);
     } else {
       setSearchVal('');
-      setParams(prev=>({...prev,q:'q'}))
+      setParams(prev => ({ ...prev, q: 'q' }))
     }
   };
 
@@ -76,7 +71,6 @@ const Recipies: React.FC = () => {
   }
 
   const handleView = (url: string) => {
-
     const regex = /\/v2\/([^/?]+)/;
     const match = url.match(regex);
 
@@ -84,18 +78,16 @@ const Recipies: React.FC = () => {
       const id = match[1];
       router.push(`recipes/${id}`)
     }
-
   }
 
   return (
     <>
-      
       <SearchBar selectedValue={params?.cuisineType} searchValue={searchVal} handleOnBlur={handleOnBlur} handleChange={handleChange} handleSelect={handleSelect} />
-      {isLoading ? <Loader />: recipes?.length ? <div className="flex justify-center flex-wrap w-full my-4 flex-wrap">{recipes.map((item: IObject) =>
-      <RecipieCard
+      {isLoading ? <Loader /> : recipes?.length ? <div className="flex justify-center flex-wrap w-full my-4 flex-wrap">{recipes.map((item: IObject) =>
+        <RecipieCard
 
-        calories={Math.floor(item?.recipe?.calories)}
-        detailApi={item?._links?.self?.href ?? ""} handleView={handleView} cuisineType={item?.recipe?.cuisineType?.[0]} key={item?.recipe?.externalId} source={item?.recipe?.source} label={item?.recipe?.label} recipeImg={item?.recipe?.image} />
+          calories={Math.floor(item?.recipe?.calories)}
+          detailApi={item?._links?.self?.href ?? ""} handleView={handleView} cuisineType={item?.recipe?.cuisineType?.[0]} key={item?.recipe?.externalId} source={item?.recipe?.source} label={item?.recipe?.label} recipeImg={item?.recipe?.image} />
       )}</div> : <div style={{ background: 'white', height: '100vh', margin: '3rem 0' }} className="flex flex-col items-center	">
         <h1 className="text-green">Please Search Your favorite Recipes</h1>
         <img src="/search.png" width={400} height={400} />

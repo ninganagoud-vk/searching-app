@@ -30,3 +30,6 @@ body {
 .select__input{
   font-size: 20px !important;
 }
+form .basic-multi-select{
+  color: black;
+}

@@ -2,6 +2,35 @@ import { ChangeEvent } from "react"
 import { MultiValue } from 'react-select';
 
 
+export interface ILinks {
+  [key: string]: any; 
+}
+
+// Define the interface for the response
+export interface IListingResponse {
+  from: string;
+  hits: any[]; 
+  count: number;
+  __links: ILinks;
+}
+
+
+// Define the interface for the response
+export interface IDetailResponse {
+  recipe: ILinks 
+  __links: ILinks;
+}
+
+
+export interface IErrorResponse {
+  status: number;
+}
+
+// Define an interface for the complete error object
+export interface IErrorObject {
+  response?: IErrorResponse; 
+}
+
 export interface IObject {
   [key:string]:any
 }
@@ -27,10 +56,6 @@ export interface IParams  {
 export interface IAllQueryCombined extends IQuery, IParams {
   
 }
-
-
-
-
 
 export interface ISelectedValues {
   label: string

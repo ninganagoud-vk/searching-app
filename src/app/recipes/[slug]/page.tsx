@@ -4,33 +4,36 @@ import { getRecipeById } from "@/apis/index";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from 'next/navigation';
 import Loader from "@/components/loader";
-import { IObject } from "@/interfaces/recipe";
+import { IDetailResponse, IErrorObject, IObject } from "@/interfaces/recipe";
 
 const Recipies = () => {
   const { slug } = useParams()
   const router = useRouter()
-  const [recipes, setRecipies] = useState<IObject>({})
+  const [recipes, setRecipies] = useState<IObject | undefined>({})
   const [isLoading, setLoading] = useState(false)
 
   const getData = async () => {
     try {
       setLoading(true)
-      const response = await getRecipeById(slug, {
+      let params = {
         type: 'public',
         app_id: "b72bb112",
         app_key: 'c4615d10a88089afc5050da5f9f84f18',
-      })
-      if (response.status == 200) {
-        setRecipies(response.data?.recipe)
-        setLoading(false)
-
       }
-
-    } catch (err) {
+      const queryString = new URLSearchParams(params).toString();
+      const response: IDetailResponse | undefined = await getRecipeById(slug, queryString)
+      setRecipies(response?.recipe)
       setLoading(false)
+    } catch (err) {
+      const error = err as IErrorObject; // Type assertion
+      setLoading(false)
+      if (error.response && error.response.status === 401) {
+        // Handle 401 Unauthorized errors (e.g., redirect to login)
+        console.log('console', error.response)
+        window.location.href = '/';
+      }
     }
   }
-
 
   useEffect(() => {
     getData()
@@ -76,7 +79,6 @@ const Recipies = () => {
               </div>
             </div>
           </div>
-
           <div className="p-3" style={{ background: '#FFEDE5' }} >
             <p className="text-gray-600">
               <span className="text-xl font-bold mt-4 mb-4">Total Nutrients</span>
@@ -89,7 +91,6 @@ const Recipies = () => {
         </>
       }
     </div>
-
   )
 }
 

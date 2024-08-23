@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import Loader from '@/components/loader'
-import exp from 'constants'
 
 describe('Loader', () => {
   it('renders the loader image with correct attributes', () => {
