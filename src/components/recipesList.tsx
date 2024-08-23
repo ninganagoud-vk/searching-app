@@ -7,7 +7,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import Loader from "./loader";
 import { MultiValue } from "react-select";
-import {ISelectedValues, IAllQueryCombined } from '../interfaces/recipe'
+import {ISelectedValues, IAllQueryCombined,IObject } from '../interfaces/recipe'
 import PreviousMap from "postcss/lib/previous-map";
 
 const Recipies: React.FC = () => {
@@ -39,7 +39,7 @@ const Recipies: React.FC = () => {
       })
       tempParams.cuisineType.forEach((type: ISelectedValues) => newparams.append('cuisineType', type.value))
       const response = await getRecipies(newparams.toString())
-      if (response.status == 200) {
+      if (response.data?.hits) {
         setRecipies(response.data?.hits)
         setLoading(false)
       }
@@ -88,9 +88,11 @@ const Recipies: React.FC = () => {
   }
 
   return (
-    <div>
+    <>
+      
       <SearchBar selectedValue={params?.cuisineType} searchValue={searchVal} handleOnBlur={handleOnBlur} handleChange={handleChange} handleSelect={handleSelect} />
-      {isLoading ? <Loader /> : recipes?.length ? <div className="flex justify-center flex-wrap w-full my-4 flex-wrap">{recipes.map((item: any) => <RecipieCard
+      {isLoading ? <Loader />: recipes?.length ? <div className="flex justify-center flex-wrap w-full my-4 flex-wrap">{recipes.map((item: IObject) =>
+      <RecipieCard
 
         calories={Math.floor(item?.recipe?.calories)}
         detailApi={item?._links?.self?.href ?? ""} handleView={handleView} cuisineType={item?.recipe?.cuisineType?.[0]} key={item?.recipe?.externalId} source={item?.recipe?.source} label={item?.recipe?.label} recipeImg={item?.recipe?.image} />
@@ -98,7 +100,7 @@ const Recipies: React.FC = () => {
         <h1 className="text-green">Please Search Your favorite Recipes</h1>
         <img src="/search.png" width={400} height={400} />
       </div>}
-    </div>
+    </>
   )
 }
 

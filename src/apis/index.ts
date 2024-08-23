@@ -13,7 +13,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         // Add authorization token or other headers here
-        console.log('configg', config)
         return config;
     },
     (error) => {

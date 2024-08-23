@@ -4,7 +4,7 @@ import {Irecipe} from  '../interfaces/recipe'
 
 const RecipieCard: React.FC<Irecipe>  = ({ detailApi, cuisineType, calories, recipeImg, label, source, handleView }) => {
 
-    return (
+    return (    
         <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-2 w-1/5 m-2">
             <div style={{ height: '120px' }} className="flex p-1 align-center">
                 <img loading="lazy" className="rounded object-cover h-full w-70 " src={recipeImg} alt="recipe image" />
