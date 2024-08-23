@@ -89,7 +89,7 @@ const Recipies: React.FC = () => {
           calories={Math.floor(item?.recipe?.calories)}
           detailApi={item?._links?.self?.href ?? ""} handleView={handleView} cuisineType={item?.recipe?.cuisineType?.[0]} key={item?.recipe?.externalId} source={item?.recipe?.source} label={item?.recipe?.label} recipeImg={item?.recipe?.image} />
       )}</div> : <div style={{ background: 'white', height: '100vh', margin: '3rem 0' }} className="flex flex-col items-center	">
-        <h1 className="text-green">Please Search Your favorite Recipes</h1>
+        <h1 className="text-green-500">Please Search Your favorite Recipes</h1>
         <img src="/search.png" width={400} height={400} />
       </div>}
     </>
