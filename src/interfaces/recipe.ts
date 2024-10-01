@@ -26,7 +26,6 @@ export interface IErrorResponse {
   status: number;
 }
 
-// Define an interface for the complete error object
 export interface IErrorObject {
   response?: IErrorResponse; 
 }

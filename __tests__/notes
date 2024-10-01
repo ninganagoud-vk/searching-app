@@ -1,0 +1,364 @@
+https://github.com/testing-library/jest-dom
+https://jestjs.io/docs/using-matchers
+// npx rtl-book serve roles-notes.js
+
+//jsdom::it creates a fake browser environment to run component
+
+//jest matchers: expect().toHaveBeenCalled toHaveBeenCalledWith toHaveBeenCalledTimes
+
+//import userEvent from "@testing-library/user-event"; here userEvent is asynchrous so use await before using userEvent
+ 
+// steps to right test cases
+// first check created elemts are present or not 
+//then find a link to button click
+
+
+//use htmlFor="name" id="name" for forms to getByLabeltext('Enter name) getByRole('textbox',{name:/Enter name/i})when dealing with forms
+//getByRole('button',{name:/submit/i})
+
+//getByRole name param  will be text content if element  have text inside like button has text inside it. 
+//getByRole name param  will be label content if element does not have text like input does not have text between its tag so name refers to label
+// note: getByRole('textbox',{name:/Enter name/i}) where name is label name not the input name
+//note getByRole name can be label text ,content text or aria-label text 
+//findByText is asynchronous so use await 
+
+//screen.logTestingPlaygroundURL()
+
+//within(getBytestId('2')).getAllByRole('row) //within get the elemnents with in the current data-testid
+
+input : textbox
+ul : list
+li listitem
+getByrole html elements corresponding name : https://www.w3.org/TR/html-aria/#docconformance
+
+
+//to find single element
+ getBY 
+ queryBy
+findBy
+
+//to find multiple element
+ getAllBY 
+ queryAllBy
+findAllBy
+
+
+ getByRole: use semantic elemwents like button img h1 p checbox
+
+
+      const textElement=getByRole('combobox')
+ select tag is called as combobox
+  input tag is called as textbox
+      const textElement=getByRole('textbox')
+
+      acsess html element by getByRole  
+
+
+//getByDisplayValue 
+//getByAltText
+//getByTitle
+//getByTestId--> data-testid
+  <label data-testid="nknn" htmlFor="name">Name</label>
+
+
+ const textElement=getByRole('textbox',{
+        name:'Name' //it refers to label name in form 
+    })
+
+  <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formState.name}
+            onChange={handleChange}
+            required
+          />
+
+
+
+          PRIORITY ORDER--->
+          getByRole
+          //getByLabelText
+//getByPlaceholderText
+//getByText 
+//getByDisplayValue
+//getByAltText
+//getByTitle
+//getByTestId
+
+
+
+to listing check length --->
+const listElements=getAllByRole('listitem') //li
+expect(listElements).toHaveLength(skills.length)
+
+
+const listElements=getByText((value)=>value.startsWith('hello')) //li
+
+queryByRole | queryAllByRole: when u want to check element present or not use query ---->
+
+findByRole | findAllByRole: findByRole returns a promise it is very impt so use async await when u used findByRole
+   when u want to fetch data from server that is to be fetched from db after some time.
+
+
+
+   **DEBUGGING**
+   screen.debug()
+  
+   log based on roles: 
+   import {  render, screen,logRoles } from '@testing-library/react'
+
+
+describe('login',()=>{
+    it('render login button with some delay',async()=>{
+     const {findByRole,container}= 
+     
+     logRoles(container)
+
+
+import userEvent @testing-library/user-event
+const listElements=getAllByRole('listitem') //li
+
+await userEvent.click()
+
+make sure userEvent must be used with await  
+
+
+
+//multi select is called as listbox
+//single select is called as combobox
+
+
+//wrapper for main app like context provider
+render(<Logintimer />,{
+wrapper:AppProvider})
+
+//here AppProvider act as wrapper to this logintimer component or create file test.utils.tsx and
+https://testing-library.com/docs/react-testing-library/setup and  paste code form custom render
+import React, {ReactElement} from 'react'
+import {render, RenderOptions} from '@testing-library/react'
+import {ThemeProvider} from 'my-ui-lib'
+import {TranslationProvider} from 'my-i18n-lib'
+import defaultStrings from 'i18n/en-x-default'
+
+const AllTheProviders = ({children}: {children: React.ReactNode}) => {
+  return (
+    <ThemeProvider theme="light">
+      <TranslationProvider messages={defaultStrings}>
+        {children}
+      </TranslationProvider>
+    </ThemeProvider>
+  )
+}
+
+const customRender = (
+  ui: ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>,
+) => render(ui, {wrapper: AllTheProviders //***specify wrapper here**, ...options})
+
+export * from '@testing-library/react'
+export {customRender as render}
+
+vvimpt---> when u use wrapper  import exp from 'constants'
+import { getByRole, getByText, render, screen, waitFor, within } from '../test-utils'import { initialize } from 'next/dist/server/lib/render-server'
+  not from '@testing-library/react'
+
+
+//renderHook is used to test customhook as customhook cant be tested without functional component so  renderHook gives a wrapper to customhook 
+
+
+
+//ACT : wrap all codes inside act which has state updates
+
+//note  
+const incrementHandler=jest.fn()
+expect(incrementHandler).toHaveBeenCalledTimes(2)
+// toHaveBeenCalledTimes is used with mocking function  like incrementHandler not with html elememnts like buttons
+
+
+//jest.fn is used to mock function without having to worry about the actual implimentation of the function
+
+//waitFor internally uses act when  state updation  so we dont need act when using waitfor 
+
+// Use act when testing components or functions that update state synchronously.
+// This includes simulating user interactions or other events that trigger state updates.
+// import { render, screen, fireEvent } from '@testing-library/react';
+// import MyComponent from './MyComponent';
+
+// test('increments counter on button click', () => {
+//   const { getByText } = render(<MyComponent />);
+//   const button = getByText('Increment');
+  
+//   act(() => {
+//     fireEvent.click(button);
+//   });
+  
+//   expect(getByText('Count: 1')).toBeInTheDocument();
+// });
+
+
+// waitFor Utility
+// Use waitFor to handle asynchronous state updates caused by side effects like fetch or setTimeout.
+//  waitFor ensures that your assertions are made only after the component has updated with the latest state.
+//If your component relies on effects (like useEffect) that have asynchronous behavior, waitFor can be used to wait until these effects are fully processed.
+// import { render, screen, waitFor } from '@testing-library/react';
+// import MyComponent from './MyComponent';
+
+// test('effect triggers state update', async () => {
+//   render(<MyComponent />);
+  
+//   await waitFor(() => {
+//     expect(screen.getByText('Updated State')).toBeInTheDocument();
+//   });
+// });
+
+//if u want text nested element p tag 
+
+// <div>
+// parent
+// <p>
+// child
+// <p>
+
+
+// <div>
+
+
+const parent=getByText('parent')
+const child=within(parent).getByText('child')
+expect(users).toBeInTheDocument()
+
+
+//how to do functional prop testing  handlechange handlesubmit using jest.fn()
+
+
+
+
+// how to debug:
+// const { debug } = render(<MyComponent />);
+//console,.log(prettyDOM(container)) 
+// logRules(container)
+// debug()
+
+// if u want increase html debug  lines in console  to print then use below command
+// DEBUG_PRINT_LIMIT=10000 npm run test
+
+
+export default {
+  get: jest.fn().mockResolvedValue({
+    name:'ekjnfb'
+  })
+}
+
+// beforeEach is used to initialize anything before test runs runs o
+//beforeEach runs on every test
+
+//beforeAll run only once before all tests
+
+
+
+
+// mock npm package
+
+// // api.test.ts
+// import * as myPackage from 'my-package';
+
+// // Mock a specific function
+// jest.mock('my-package', () => ({
+//   specificFunction: jest.fn(),
+// }));
+
+// describe('some test', () => {
+//   it('should use the mocked function', () => {
+//     // Mock the specific function's implementation
+//     (myPackage.specificFunction as jest.Mock).mockReturnValue('mocked value');
+
+//     // Your test code here
+//   });
+// });
+
+
+
+//aria-label for button if button does not have text inside it
+// <button aria-label"sign-in">
+// <SVG />
+// </button>
+
+// <button aria-label"sign-out">
+// <SVG />
+// </button>
+
+
+getByRole('button',{name:/sign-in/i})
+
+//note:  getByRole name can be label text ,content text or aria-label text 
+
+//getBy getAllBy, queryBy queryAllBy , findBy, findAllBy
+
+// use getBy getAllBy when: prove an element exisits
+// use queryBy queryAllBy  when: prove an element doesnot exisits bcz queryBy returns null if element does not exits and queryAllBy retursn empty array [] if eleemt does not exists
+//getBy  getAllBy, findBy, findAllBy throws error when no element found
+//note findBy & findAllBy must be used with async keyword after 1 second by default. 
+// use findby when element eventually exits later after some delay 
+
+//getbyDisplayValue is to check input value -->
+
+// matchers: expeact().toEqual 
+//toEqual toBeInTheDocument are called as matchers
+
+
+// aria-label mandotory for form 
+//  <form aria-label="form" >
+
+
+
+// Scenarios Requiring act error-->warning
+// State Updates: When testing components that involve setting state based on user actions (like clicks or other events).
+
+// Effects (useEffect hook): When you are testing components that run side effects which further cause state updates or involve asynchronous logic.
+
+// Fetching Data: When your components fetch data from an API and you want to wait for the data to load in order to test the component’s response to that data.
+
+// Async Actions in Effects: When an effect (useEffect) includes asynchronous actions that update the state, you’ll want to ensure these actions complete to verify their impact on the component output.
+
+// ****IMPT**** to solve act warnings use   findBy,findAllyBy, waitFor, userEvent  which internally call act 
+// we dont use act directly instead we use  findBy,findAllyBy, waitFor, userEvent  which internally call act 
+// act will be called internally in these below commands
+// findBy,findAllyBy, waitFor, userEvent will interllay call act inside them 
+
+
+//when u have mutiple server setting in msw use seperate describe('',()=>{}) method for each scenario otherwise servers will parallelt run it will not seperate 
+
+
+
+//code coverage--->
+  // line covergae : this would ideally include lines where state is set, the state-dependent rendering, and the event handlers.
+    // example: useState and onchenage & condtional rendering should ne covered--> 
+    //Statement Coverage: 
+
+
+
+
+
+//     Providers: To handle providers, pass second argument in render function with attribute wrapper.
+
+//   render(<App/>,{
+//     wrapper: AppProviders
+//   })
+// Also if want to use Provider for all components so instead of passing wrapper to individual render fn, we can create custom render fn found here.
+
+
+
+// Custom Hooks: To test custom hooks RTL provides a method renderHook which returns result we test with result.current
+
+// const {result}= renderHook(useCustom);
+// expect(result.current.count).toBe(0)
+// To test with custom hooks with props, we can pass a second argument with attribute initialProps.
+
+//  const {result}= renderHook(useCustom,{
+//   initialProps: {
+//     count:10
+//   }
+//  });
+//  expect(result.current.count).toBe(0)

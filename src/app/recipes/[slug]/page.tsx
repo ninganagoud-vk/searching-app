@@ -6,8 +6,8 @@ import { useParams, useRouter } from 'next/navigation';
 import Loader from "@/components/loader";
 import { IDetailResponse, IErrorObject, IObject } from "@/interfaces/recipe";
 
-const Recipies = () => {
-  const { slug } = useParams()
+const Recipies = ({params}:{slug:number}) => {
+  const { slug } = params
   const router = useRouter()
   const [recipes, setRecipies] = useState<IObject | undefined>({})
   const [isLoading, setLoading] = useState(false)
@@ -18,7 +18,7 @@ const Recipies = () => {
       let params = {
         type: 'public',
         app_id: "b72bb112",
-        app_key: 'c4615d10a88089afc5050da5f9f84f18',
+        // app_key: 'c4615d10a88089afc5050da5f9f84f18',
       }
       const queryString = new URLSearchParams(params).toString();
       const response: IDetailResponse | undefined = await getRecipeById(slug, queryString)
@@ -36,7 +36,7 @@ const Recipies = () => {
   }
 
   useEffect(() => {
-    getData()
+    // getData()
   }, [slug])
 
   return (

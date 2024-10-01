@@ -4,13 +4,12 @@ import { getRecipies } from "@/apis/index";
 import RecipieCard from "@/components/recipeCard";
 import SearchBar from "@/components/searchBar/search";
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
 import Loader from "./loader";
 import { MultiValue } from "react-select";
 import { ISelectedValues, IAllQueryCombined, IObject, IListingResponse } from '../interfaces/recipe'
 
 const Recipies: React.FC = () => {
-  const router = useRouter()
+  // const router = useRouter()
   const [recipes, setRecipies] = useState<any[] | undefined>([])
   const [searchVal, setSearchVal] = useState('')
   const [isLoading, setLoading] = useState(false)
@@ -45,7 +44,7 @@ const Recipies: React.FC = () => {
   }
 
   useEffect(() => {
-    getData()
+    // getData()
   }, [params])
 
 
@@ -76,7 +75,7 @@ const Recipies: React.FC = () => {
 
     if (match && match[1]) {
       const id = match[1];
-      router.push(`recipes/${id}`)
+      // router.push(`recipes/${id}`)
     }
   }
 
